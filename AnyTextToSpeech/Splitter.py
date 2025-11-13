@@ -52,13 +52,13 @@ class TextToSpeechSplitter(Splitter):
 
     def split_video(self, split_locations: Union[List[Dict[str,int]],None])-> None:
         if split_locations:
+
+            #____place in outer class
             filename = os.path.basename(self.raw_audio_path)
-            new_folder_path = f"{self.output_path}/{filename[:-4]}"
-            futils.make_dir(new_folder_path)
 
             # start seperate and create files
             for time_stamp in split_locations:
-                output_destination = f"{new_folder_path}/{filename}_{time_stamp['start']}_{time_stamp['end']}.wav"
+                output_destination = f"{self.output_path}/{filename}_{time_stamp['start']}_{time_stamp['end']}.wav"
                 self.audio_created.append(output_destination)
                 (
                     ffmpeg

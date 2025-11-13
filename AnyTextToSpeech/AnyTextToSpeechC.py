@@ -4,6 +4,9 @@ from whisper import Whisper
 import AnyTextToSpeech.Splitter as Splitter
 from AnyTextToSpeech.TextToSpeech import WhisperAPITextToSpeech
 from typing import Any
+import os
+import AnyTextToSpeech.folder_utils as futils
+
 
 class AnyTextToSpeech:
 
@@ -11,11 +14,17 @@ class AnyTextToSpeech:
          self.raw_audio_path = raw_audio_path
          self.output_path= output_path
          self.texttospeech = texttospeech
+
+         # Creates folder
+         filename = os.path.basename(self.raw_audio_path)
+         self.new_folder_path = f"{self.output_path}/{filename[:-4]}"
+         futils.make_dir(self.new_folder_path)
+
+
          if filter is None:
-            self.splitter = splitter(raw_audio_path=self.raw_audio_path, output_path=output_path)
+            self.splitter = splitter(raw_audio_path=self.raw_audio_path, output_path=self.new_folder_path)
          else:
             pass
-
 
      def text_to_speech(self):
          self.splitter.split()
