@@ -1,6 +1,9 @@
 from abc import ABC, abstractmethod
+import ffmpeg
+from df import enhance, init_df
 from df.enhance import enhance, init_df, load_audio, save_audio
-from pydub import AudioSegment
+
+
 
 class Filter(ABC):
     def __init__(self, raw_audio_path, output_path=None):
@@ -11,25 +14,25 @@ class Filter(ABC):
     def filter_audio(self):
         pass
 
-class DeepFilterNet(Filter):
-
+class RNNoiseFilter(Filter):
     def filter_audio(self):
+        resampled_out_path = f"{self.output_path}/resampled_audio.wav"
+        (
+            ffmpeg
+            .input(self.raw_audio_path)
+            .output(resampled_out_path, acodec='pcm_s16le', ar='48k')  # Change codec to AAC and set sample rate to 48kHz
+            .run()
+        )
+        model, df_state, _ = init_df()  # Load default model
+        audio, _ = load_audio(resampled_out_path, sr=df_state.sr())
+        enhanced_audio = enhance(model, df_state, audio)
+        save_audio(f"{self.output_path}/enhanced.wav", enhanced_audio, df_state.sr())
 
-        # Load default model
-        model, df_state, _ = init_df()
-        # Download and open some audio file. You use your audio files here
-        audio_path = ""
-        audio, _ = load_audio(audio_path, sr=df_state.sr())
-        # Denoise the audio
-        enhanced = enhance(model, df_state, audio)
-        # Save for listening
-        save_audio("enhanced.wav", enhanced, df_state.sr())
 
-    def resample_48K(self):
-        audio = AudioSegment.from_file(self.raw_audio_path)
-        audio_resampled = audio.set_frame_rate(48000)
-        # Export the resampled audio file
-        output_resample_path = f"{self.output_path}/resampled.wav"
-        audio_resampled.export(self.output_path, format="wav")
-        return
 
+
+filter = RNNoiseFilter(raw_audio_path="/home/vexed/SDRTrunk/recordings/20251111_190803Cities_Fresno_PoliceNorthEast__TO_4.mp3",
+                 output_path="/home/vexed/PycharmProjects/PoliceScannerSDR/data/processed/20251111_190803Cities_Fresno_PoliceNorthEast__TO_4"
+                 )
+
+filter.filter_audio()
