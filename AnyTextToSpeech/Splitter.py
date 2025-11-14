@@ -69,6 +69,5 @@ class TextToSpeechSplitter(Splitter):
 
             print("Split Completed")
 
-#splitter = TextToSpeechSplitter("/home/vexed/SDRTrunk/recordings/20251111_190803Cities_Fresno_PoliceNorthEast__TO_4.mp3",
-                                #"/home/vexed/PycharmProjects/PoliceScannerSDR/data/processed")
-#splitter.split()
+
+
