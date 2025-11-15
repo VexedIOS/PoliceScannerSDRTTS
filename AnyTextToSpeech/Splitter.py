@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 from typing import List, Dict, Union
 import os
 import torch
+from torch.ao.nn.quantized.functional import threshold
+
 import AnyTextToSpeech.folder_utils as futils
 import ffmpeg
 
@@ -35,7 +37,7 @@ class TextToSpeechSplitter(Splitter):
         silero_model, utils = torch.hub.load(
             repo_or_dir='snakers4/silero-vad',
             model='silero_vad',
-            force_reload=True  # Keeps older file saves time
+            force_reload=True #Keeps older file saves time
         )
         (get_speech_timestamps, _, read_audio, *_) = utils
 
@@ -45,7 +47,8 @@ class TextToSpeechSplitter(Splitter):
             wav,
             silero_model,
             sampling_rate=TextToSpeechSplitter.SAMPLING_RATE,
-            return_seconds=True
+            return_seconds=True,
+            threshold = 0.3
         )
 
         return speech_timestamps

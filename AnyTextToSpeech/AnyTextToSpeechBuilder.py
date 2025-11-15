@@ -12,6 +12,7 @@ class AnyTextToSpeechBuild:
         self.raw_audio_path = raw_audio_path
         self.output_path = output_path
         self.texttospeech = texttospeech
+        self.file_all_data = []
 
         # Creates folder
         filename = os.path.basename(self.raw_audio_path)
@@ -33,7 +34,7 @@ class AnyTextToSpeechBuild:
             for audio in audio_list:
                 TTS = self.texttospeech(audio)
                 TTS.get_text()
-                print(TTS.text_data)
+                self.file_all_data.append(TTS.text_data)
 
     def delete_all_files(self):
         if not os.path.isdir(self.output_path):
@@ -49,4 +50,8 @@ class AnyTextToSpeechBuild:
                     shutil.rmtree(item_path)  # Remove subdirectories and their contents
             except OSError as e:
                 print(f"Error deleting {item_path}: {e}")
+
+    def clean_text(self):
+        pass
+
 
