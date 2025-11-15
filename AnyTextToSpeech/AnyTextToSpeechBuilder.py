@@ -51,7 +51,7 @@ class AnyTextToSpeechBuild:
             except OSError as e:
                 print(f"Error deleting {item_path}: {e}")
 
-    def clean_text(self):
-        pass
+    def clean_SDR_text(self):
+
 
 
