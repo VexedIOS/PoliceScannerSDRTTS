@@ -1,29 +1,8 @@
-from abc import ABC, abstractmethod
-from typing import List, Dict, Union
-import os
+from AnyTextToSpeech.SplitterModels.Splitter import Splitter
+from typing import Union, List, Dict
 import torch
-from torch.ao.nn.quantized.functional import threshold
-
-import AnyTextToSpeech.folder_utils as futils
+import os
 import ffmpeg
-
-class Splitter(ABC):
-
-    def __init__(self, raw_audio_path: Union[os.PathLike,str], output_path: Union[os.PathLike,str]):
-        self.raw_audio_path = raw_audio_path
-        self.output_path = output_path
-        self.audio_created = []
-
-    @abstractmethod
-    def split_locator(self) -> Union[List[Dict[str,int]],None]: # return None or List of tupples
-        pass
-
-    @abstractmethod
-    def split_video(self, split_locations: Union[List[Dict[str,int]],None]): # return new
-        pass
-
-    def split(self):
-        self.split_video(split_locations=self.split_locator())
 
 
 class TextToSpeechSplitter(Splitter):
@@ -66,11 +45,7 @@ class TextToSpeechSplitter(Splitter):
                 (
                     ffmpeg
                     .input(self.raw_audio_path, ss=time_stamp['start'], to=time_stamp['end'])  # Specify start and end time for input
-                    .output(output_destination, c='copy')  # Copy streams without re-encoding
+                    .output(output_destination, c='copy', loglevel="panic")  # Copy streams without re-encoding
                     .run(overwrite_output=True)  # Run the command and overwrite if output exists
                 )
-
-            print("Split Completed")
-
-
 

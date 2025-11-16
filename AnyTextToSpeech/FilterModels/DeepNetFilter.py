@@ -1,18 +1,7 @@
-from abc import ABC, abstractmethod
-from os.path import basename
-
 import ffmpeg
 from df.enhance import enhance, init_df, load_audio, save_audio
 import os
-
-class Filter(ABC):
-    def __init__(self, raw_audio_path, output_path=None):
-        self.raw_audio_path = raw_audio_path
-        self.output_path = output_path
-
-    @abstractmethod
-    def filter_audio(self):
-        pass
+from AnyTextToSpeech.FilterModels.Filter import Filter
 
 
 class DeepNetFilter(Filter):
@@ -31,7 +20,3 @@ class DeepNetFilter(Filter):
         basename = os.path.basename(self.raw_audio_path)
         save_audio(out_path := f"{self.output_path}/{basename}", enhanced_audio, df_state.sr())
         return out_path
-
-class ReduceNoiseFilter(Filter):
-    def filter_audio(self):
-        pass

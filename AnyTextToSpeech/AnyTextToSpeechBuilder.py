@@ -1,5 +1,3 @@
-import AnyTextToSpeech.Splitter as Splitter
-from AnyTextToSpeech.TextToSpeech import WhisperAPITextToSpeech
 from typing import Any
 import os
 import AnyTextToSpeech.folder_utils as futils
@@ -52,6 +50,13 @@ class AnyTextToSpeechBuild:
                 print(f"Error deleting {item_path}: {e}")
 
     def clean_SDR_text(self):
+        text_only = []
+        if self.file_all_data:
+            for text_data in self.file_all_data:
+                text_only.append(text_data["text"])
 
-
+        all_text = "".join(text_only)
+        basename= os.path.basename(self.raw_audio_path)
+        basename = basename[:-4]
+        print(f"{basename}: {all_text}")
 
