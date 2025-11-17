@@ -1,3 +1,10 @@
+# All files that have to be processed
 /data/processed/*
 /data/raw/*
+# Folder Associated with development and running
+__pycache__/
+.idea/
+.venv
 
+# All .xml
+*.xml
