@@ -1,12 +1,14 @@
+import warnings
+warnings.simplefilter("ignore")
 import whisper
 import os
 from AnyTextToSpeech.TextToSpeechModels.TextToSpeech import TextToSpeech
 
+whisper_model = whisper.load_model("large-v3-turbo")
 
 class WhisperAPITextToSpeechLargeV3Turbo(TextToSpeech):
     def get_text(self):
         # Initiate Whisper API
-        whisper_model = whisper.load_model("large-v3-turbo")
         if not os.path.exists(self.audio_path):
             print(f"Error: Audio file not found at '{self.audio_path}'.'")
             return None

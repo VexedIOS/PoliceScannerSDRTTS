@@ -1,12 +1,14 @@
+import warnings
+warnings.simplefilter("ignore")
+
 import os
 import whisper
 from AnyTextToSpeech.TextToSpeechModels.TextToSpeech import TextToSpeech
-
+whisper_model = whisper.load_model("medium.en")
 
 class WhisperTextToSpeechMediumEn(TextToSpeech):
     def get_text(self):
         # Initiate Whisper API
-        whisper_model = whisper.load_model("medium.en")
         if not os.path.exists(self.audio_path):
             print(f"Error: Audio file not found at '{self.audio_path}'.'")
             return None

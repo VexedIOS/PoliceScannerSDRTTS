@@ -6,7 +6,8 @@ def make_dir(folder_name):
         os.mkdir(folder_name)
         #print(f"Folder '{folder_name}' created successfully.")
     except FileExistsError:
-        print(f"Folder '{folder_name}' already exists.")
+        #print(f"Folder '{folder_name}' already exists.")
+        pass
     except FileNotFoundError:
         print(f"Error: Parent directories do not exist for '{folder_name}'.")
 

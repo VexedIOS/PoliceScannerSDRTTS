@@ -4,34 +4,35 @@ import torch
 import os
 import ffmpeg
 
+# LOAD MODEL
+
+torch.set_num_threads(1)
+silero_model, utils = torch.hub.load(
+    repo_or_dir='snakers4/silero-vad',
+    model='silero_vad',
+    force_reload=True  # Keeps older file saves time
+)
+(get_speech_timestamps, _, read_audio, *_) = utils
+
 
 class TextToSpeechSplitter(Splitter):
     SAMPLING_RATE = 16000
 
     def split_locator(self) -> Union[List[Dict[str,int]],None]:
-        # File path for testing
+        try:
+            wav = read_audio(self.raw_audio_path, sampling_rate=TextToSpeechSplitter.SAMPLING_RATE)  # Read the audio file
 
-        # Initiate Speech Detector
-        torch.set_num_threads(1)
-        silero_model, utils = torch.hub.load(
-            repo_or_dir='snakers4/silero-vad',
-            model='silero_vad',
-            force_reload=True #Keeps older file saves time
-        )
-        (get_speech_timestamps, _, read_audio, *_) = utils
+            speech_timestamps = get_speech_timestamps(
+                wav,
+                silero_model,
+                sampling_rate=TextToSpeechSplitter.SAMPLING_RATE,
+                return_seconds=True,
+                threshold = 0.3
+            )
 
-        wav = read_audio(self.raw_audio_path, sampling_rate=TextToSpeechSplitter.SAMPLING_RATE)  # Read the audio file
-
-        speech_timestamps = get_speech_timestamps(
-            wav,
-            silero_model,
-            sampling_rate=TextToSpeechSplitter.SAMPLING_RATE,
-            return_seconds=True,
-            threshold = 0.3
-        )
-
-        return speech_timestamps
-
+            return speech_timestamps
+        except:
+            return None
     def split_video(self, split_locations: Union[List[Dict[str,int]],None])-> None:
         if split_locations:
 
