@@ -12,9 +12,3 @@ class Filter(ABC):
     def filter_audio(self):
         pass
 
-
-
-
-class ReduceNoiseFilter(Filter):
-    def filter_audio(self):
-        pass

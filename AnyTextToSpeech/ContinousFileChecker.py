@@ -86,13 +86,3 @@ class SDRTrunkLogger:
         except sqlite3.IntegrityError or sqlite3.OperationalError:
             cursor.close()
             conn.close()
-
-
-
-
-
-logger = SDRTrunkLogger(recording_file_path="/home/vexed/SDRTrunk/recordings/",
-               output_file_path="/home/vexed/PycharmProjects/PoliceScannerSDR/data/processed",
-                        log_=True,
-                        save_recordings=False)
-logger.run()
